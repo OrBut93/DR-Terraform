@@ -12,3 +12,4 @@ provider "google" {
   project = "orprojectestt"
   region  = "var.region"
 }
+
