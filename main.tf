@@ -1,7 +1,12 @@
-# configure backup project  
+###############################################
+# CONFIGURE PROJECTS
+###############################################
+
+# configure backup project
 provider "google" {
+  alias       = "backup"
   credentials = file(var.backup_service_account_key_path)
-  project     = "<backup_project_id>"
+  project     = var.backup_project_id
   region      = var.region
 }
 
@@ -9,14 +14,14 @@ provider "google" {
 provider "google" {
   alias       = "network"
   credentials = file(var.network_service_account_key_path)
-  project     = "<network_project_id>"
+  project     = var.network_project_id
   region      = var.region
 }
 # configure production project  
 provider "google" {
   alias       = "production"
   credentials = file(var.production_service_account_key_path)
-  project     = "<production_project_id>"
+  project     = var.production_project_id
   region      = var.region
 }
 
@@ -26,19 +31,19 @@ provider "google" {
 
 resource "google_compute_network" "vpc_backup" {
   name                    = "vpc-backup"
-  project                 = "<backup_project_id>"
+  project                 = var.backup_project_id
   auto_create_subnetworks = false
 }
 
 resource "google_compute_network" "vpc_network" {
   name                    = "vpc-network"
-  project                 = "<network_project_id>"
+  project                 = var.network_project_id
   auto_create_subnetworks = false
 }
 
 resource "google_compute_network" "vpc_production" {
   name                    = "vpc-production"
-  project                 = "<production_project_id>"
+  project                 = var.production_project_id
   auto_create_subnetworks = false
 }
 

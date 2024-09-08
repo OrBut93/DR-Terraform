@@ -1,3 +1,8 @@
+
+################################
+#REGION
+################################
+
 ## this defined the Region for VM ## 
 variable "zone" {
   default = "europe-west3-c"
@@ -48,7 +53,3 @@ variable "network_project_id" {
 variable "production_project_id" {
   default = ""  
 }
-
-################################
-#
-################################
