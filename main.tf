@@ -80,8 +80,8 @@ resource "google_compute_subnetwork" "subnet_production" {
 resource "google_compute_network_peering" "backup_to_network" {
   provider        = google
   name            = "backup-to-network"
-  network         = var.vpc_backup
-  peer_network    = "projects/"+var.network_project_id+"/global/networks/"+var.vpc_network+""
+  network      = "projects/${var.backup_project_id}/global/networks/${google_compute_network.vpc_backup.name}"  # Fully qualified name
+  peer_network = "projects/${var.network_project_id}/global/networks/${google_compute_network.vpc_network.name}"  # Fully qualified peer network name
   export_custom_routes = true
   import_custom_routes = true
 }
@@ -89,8 +89,8 @@ resource "google_compute_network_peering" "backup_to_network" {
 resource "google_compute_network_peering" "network_to_backup" {
   provider        = google.network
   name            = "network-to-backup"
-  network         = "vpc_network"
-  peer_network    = "projects/"+var.backup_project_id+"/global/networks/"+var.vpc_backup+""
+ network      = "projects/${var.network_project_id}/global/networks/${google_compute_network.vpc_network.name}"  # Fully qualified name
+  peer_network = "projects/${var.backup_project_id}/global/networks/${google_compute_network.vpc_backup.name}"  # Fully qualified peer network name
   export_custom_routes = true
   import_custom_routes = true
 }
@@ -99,8 +99,8 @@ resource "google_compute_network_peering" "network_to_backup" {
 resource "google_compute_network_peering" "network_to_production" {
   provider        = google.network
   name            = "network-to-production"
-  network         = var.vpc_network
-  peer_network    = "projects/"+var.production_project_id+"/global/networks/"+var.vpc_production+""
+  network      = "projects/${var.network_project_id}/global/networks/${google_compute_network.vpc_network.name}"  # Fully qualified name
+  peer_network    = "projects/${var.production_project_id}/global/networks/${google_compute_network.vpc_production.name}"
   export_custom_routes = true
   import_custom_routes = true
 }
@@ -108,8 +108,8 @@ resource "google_compute_network_peering" "network_to_production" {
 resource "google_compute_network_peering" "production_to_network" {
   provider        = google.production
   name            = "production-to-network"
-  network         = var.vpc_production
-  peer_network    = "projects/"+var.network_project_id+"/global/networks/"+var.vpc_network+""
+  network         = "projects/${var.production_project_id}/global/networks/${google_compute_network.vpc_production.name}"
+  peer_network    = "projects/${var.network_project_id}/global/networks/${google_compute_network.vpc_network.name}"
   export_custom_routes = true
   import_custom_routes = true
 }
