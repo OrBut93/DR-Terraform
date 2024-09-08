@@ -34,13 +34,13 @@ In this file, you should specify:
 - **SUBNETS NAME&CIDR**: Add the names of the 3 GCP VPCs: vpc-network, vpc-backup, and vpc-production.
 
 
-#### 3. Initializing Terraform**
+#### 3. Initializing Terraform
 Run the following command to initialize Terraform:
 ```
 terraform init
 ```
 
-#### 4. Reviewing and Applying Changes**
+#### 4. Reviewing and Applying Changes
 Review the Terraform plan to ensure it will create the desired resources:
 ```
 terraform plan
