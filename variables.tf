@@ -20,21 +20,20 @@ variable "region" {
 variable "backup_service_account_key_path" {
   description = "Backup project - The path to the service account key file"
   type        = string
-  default     = "/path/to/your/service-account-key.json"  # Set default or provide value via CLI
 }
 
 
 variable "network_service_account_key_path" {
   description = "Network project - The path to the service account key file"
   type        = string
-  default     = "/path/to/your/service-account-key.json"  # Set default or provide value via CLI
+
 }
 
 
 variable "production_service_account_key_path" {
   description = "Production project - The path to the service account key file"
   type        = string
-  default     = "/path/to/your/service-account-key.json"  # Set default or provide value via CLI
+
 }
 
 
@@ -52,4 +51,49 @@ variable "network_project_id" {
 
 variable "production_project_id" {
   default = ""  
+}
+
+
+################################
+#VPCS NAMES
+################################
+
+variable "vpc_backup" {
+  default = ""
+}
+
+variable "vpc_network" {
+  default = ""
+}
+
+variable "vpc_production" {
+  default = ""
+}
+
+################################
+#SUBNETS NAMES & CIDR
+################################
+
+variable "subnet_backup" {
+  default = ""
+}
+
+variable "subnet_network" {
+  default = ""
+}
+
+variable "subnet_production" {
+  default = ""
+}
+
+variable "subnet_backup_ip_cidr_range" {
+  default = ""
+}
+
+variable "subnet_network_ip_cidr_range" {
+  default = ""
+}
+
+variable "subnet_production_ip_cidr_range" {
+  default = ""
 }

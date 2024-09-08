@@ -30,23 +30,46 @@ provider "google" {
 ###############################################
 
 resource "google_compute_network" "vpc_backup" {
-  name                    = "vpc-backup"
+  name                    = var.vpc_backup
   project                 = var.backup_project_id
   auto_create_subnetworks = false
 }
 
+resource "google_compute_subnetwork" "subnet_backup" {
+  name          = var.subnet_backup
+  ip_cidr_range = var.subnet_backup_ip_cidr_range
+  region        = var.region
+  network       = google_compute_network.vpc_backup.id
+  project       = var.backup_project_id
+}
+
 resource "google_compute_network" "vpc_network" {
-  name                    = "vpc-network"
+  name                    = var.vpc_network
   project                 = var.network_project_id
   auto_create_subnetworks = false
 }
 
+resource "google_compute_subnetwork" "subnet_network" {
+  name          = var.subnet_network
+  ip_cidr_range = var.subnet_network_ip_cidr_range
+  region        = var.region
+  network       = google_compute_network.vpc_network.id
+  project       = var.network_project_id
+}
+
 resource "google_compute_network" "vpc_production" {
-  name                    = "vpc-production"
+  name                    = var.vpc_production
   project                 = var.production_project_id
   auto_create_subnetworks = false
 }
 
+resource "google_compute_subnetwork" "subnet_production" {
+  name          = var.subnet_production
+  ip_cidr_range = var.subnet_production_ip_cidr_range
+  region        = var.region
+  network       = google_compute_network.vpc_production.id
+  project       = var.production_project_id
+}
 
 ###############################################
 # PEERINGS
@@ -57,8 +80,8 @@ resource "google_compute_network" "vpc_production" {
 resource "google_compute_network_peering" "backup_to_network" {
   provider        = google
   name            = "backup-to-network"
-  network         = "vpc_backup"
-  peer_network    = "projects/"+var.network_project_id+"/global/networks/vpc_network"
+  network         = var.vpc_backup
+  peer_network    = "projects/"+var.network_project_id+"/global/networks/"+var.vpc_network+""
   export_custom_routes = true
   import_custom_routes = true
 }
@@ -67,7 +90,7 @@ resource "google_compute_network_peering" "network_to_backup" {
   provider        = google.network
   name            = "network-to-backup"
   network         = "vpc_network"
-  peer_network    = "projects/"+var.backup_project_id+"/global/networks/vpc_backup"
+  peer_network    = "projects/"+var.backup_project_id+"/global/networks/"+var.vpc_backup+""
   export_custom_routes = true
   import_custom_routes = true
 }
@@ -76,8 +99,8 @@ resource "google_compute_network_peering" "network_to_backup" {
 resource "google_compute_network_peering" "network_to_production" {
   provider        = google.network
   name            = "network-to-production"
-  network         = "vpc_network"
-  peer_network    = "projects/"+var.production_project_id+"/global/networks/vpc_production"
+  network         = var.vpc_network
+  peer_network    = "projects/"+var.production_project_id+"/global/networks/"+var.vpc_production+""
   export_custom_routes = true
   import_custom_routes = true
 }
@@ -85,8 +108,8 @@ resource "google_compute_network_peering" "network_to_production" {
 resource "google_compute_network_peering" "production_to_network" {
   provider        = google.production
   name            = "production-to-network"
-  network         = "vpc_production"
-  peer_network    = "projects/"+var.network_project_id+"/global/networks/vpc_network"
+  network         = var.vpc_production
+  peer_network    = "projects/"+var.network_project_id+"/global/networks/"+var.vpc_network+""
   export_custom_routes = true
   import_custom_routes = true
 }
