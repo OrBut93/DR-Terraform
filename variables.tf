@@ -9,9 +9,9 @@ variable "region" {
   
 }
 
-####################
+################################
 #CREDENTIALS
-####################
+################################
 variable "backup_service_account_key_path" {
   description = "Backup project - The path to the service account key file"
   type        = string
@@ -32,4 +32,23 @@ variable "production_service_account_key_path" {
   default     = "/path/to/your/service-account-key.json"  # Set default or provide value via CLI
 }
 
-####################
+
+################################
+#PROJECTS ID
+################################
+
+variable "backup_project_id" {
+  default = ""  
+}
+
+variable "network_project_id" {
+  default = ""  
+}
+
+variable "production_project_id" {
+  default = ""  
+}
+
+################################
+#
+################################
