@@ -1,6 +1,6 @@
 # configure backup project  
 provider "google" {
-  credentials = file("<path_to_service_account_key_file>.json")
+  credentials = file(var.backup_service_account_key_path)
   project     = "<backup_project_id>"
   region      = var.region
 }
@@ -8,14 +8,14 @@ provider "google" {
 # configure network project  
 provider "google" {
   alias       = "network"
-  credentials = file("<path_to_service_account_key_file>.json")
+  credentials = file(var.network_service_account_key_path)
   project     = "<network_project_id>"
   region      = var.region
 }
 # configure production project  
 provider "google" {
   alias       = "production"
-  credentials = file("<path_to_service_account_key_file>.json")
+  credentials = file(var.production_service_account_key_path)
   project     = "<production_project_id>"
   region      = var.region
 }
