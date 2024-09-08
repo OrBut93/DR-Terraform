@@ -20,12 +20,40 @@ provider "google" {
   region      = var.region
 }
 
+###############################################
+# CREATE VPC
+###############################################
+
+resource "google_compute_network" "vpc_backup" {
+  name                    = "vpc-backup"
+  project                 = "<backup_project_id>"
+  auto_create_subnetworks = false
+}
+
+resource "google_compute_network" "vpc_network" {
+  name                    = "vpc-network"
+  project                 = "<network_project_id>"
+  auto_create_subnetworks = false
+}
+
+resource "google_compute_network" "vpc_production" {
+  name                    = "vpc-production"
+  project                 = "<production_project_id>"
+  auto_create_subnetworks = false
+}
+
+
+###############################################
+# PEERINGS
+###############################################
+
 # Create VPC peering between backup and network
+
 resource "google_compute_network_peering" "backup_to_network" {
   provider        = google
   name            = "backup-to-network"
-  network         = "backup-vpc"
-  peer_network    = "projects/<network_project_id>/global/networks/network-vpc"
+  network         = "vpc_backup"
+  peer_network    = "projects/"+var.network_project_id+"/global/networks/vpc_network"
   export_custom_routes = true
   import_custom_routes = true
 }
@@ -33,8 +61,8 @@ resource "google_compute_network_peering" "backup_to_network" {
 resource "google_compute_network_peering" "network_to_backup" {
   provider        = google.network
   name            = "network-to-backup"
-  network         = "network-vpc"
-  peer_network    = "projects/<backup_project_id>/global/networks/backup-vpc"
+  network         = "vpc_network"
+  peer_network    = "projects/"+var.backup_project_id+"/global/networks/vpc_backup"
   export_custom_routes = true
   import_custom_routes = true
 }
@@ -43,8 +71,8 @@ resource "google_compute_network_peering" "network_to_backup" {
 resource "google_compute_network_peering" "network_to_production" {
   provider        = google.network
   name            = "network-to-production"
-  network         = "network-vpc"
-  peer_network    = "projects/<production_project_id>/global/networks/production-vpc"
+  network         = "vpc_network"
+  peer_network    = "projects/"+var.production_project_id+"/global/networks/vpc_production"
   export_custom_routes = true
   import_custom_routes = true
 }
@@ -52,8 +80,8 @@ resource "google_compute_network_peering" "network_to_production" {
 resource "google_compute_network_peering" "production_to_network" {
   provider        = google.production
   name            = "production-to-network"
-  network         = "production-vpc"
-  peer_network    = "projects/<network_project_id>/global/networks/network-vpc"
+  network         = "vpc_production"
+  peer_network    = "projects/"+var.network_project_id+"/global/networks/vpc_network"
   export_custom_routes = true
   import_custom_routes = true
 }
